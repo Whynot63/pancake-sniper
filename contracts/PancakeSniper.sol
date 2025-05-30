@@ -30,5 +30,30 @@ contract PancakeSniper {
         }
     }
 
+    function buyAndLiquidity(
+        address token,
+        uint256 tokenBuyAmount,
+        uint256 wNativeLiquidityAmount
+    ) external payable {
+        address[] memory path = new address[](2);
+        path[0] = wNative;
+        path[1] = token;
+        router.swapETHForExactTokens{value: tokenBuyAmount}(
+            tokenBuyAmount,
+            path,
+            address(this),
+            block.timestamp
+        );
+
+        router.addLiquidityETH{value: wNativeLiquidityAmount}(
+            token,
+            tokenBuyAmount,
+            0,
+            0,
+            msg.sender,
+            block.timestamp
+        );
+    }
+
     receive() external payable {}
 }
