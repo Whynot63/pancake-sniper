@@ -4,19 +4,19 @@ pragma solidity ^0.8.28;
 import {PancakeRouter} from "./interfaces/PancakeRouter.sol";
 
 contract PancakeSniper {
-    address immutable wBNB;
+    address immutable wNative;
     PancakeRouter immutable router;
 
-    constructor(address router_, address wBNB_) {
+    constructor(address router_, address wNative_) {
         router = PancakeRouter(router_);
-        wBNB = wBNB_;
+        wNative = wNative_;
     }
 
     function buy(address token, uint256 amountOut) external payable {
         address[] memory path = new address[](2);
-        path[0] = wBNB;
+        path[0] = wNative;
         path[1] = token;
-        router.swapETHForExactTokens(
+        router.swapETHForExactTokens{value: msg.value}(
             amountOut,
             path,
             msg.sender,
